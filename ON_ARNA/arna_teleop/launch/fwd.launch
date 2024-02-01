@@ -1,0 +1,7 @@
+<launch>
+<master auto="start"/>
+
+<!-- Start forwarding node -->
+<node name="arna_teleop_fwd_node" pkg="arna_teleop" type="arna_teleop_fwd_node"/>
+
+</launch>

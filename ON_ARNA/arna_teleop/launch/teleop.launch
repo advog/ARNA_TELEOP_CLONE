@@ -1,0 +1,31 @@
+<launch>
+
+<master auto="start"/>
+
+<!-- Start arm driver -->
+<include file="$(find kortex_driver)/launch/old_kortex_driver.launch">
+<arg name="ip_address" value="kinova.lan"/>
+<arg name="start_rviz" value="false"/>
+<arg name="robot_name" value="arm"/>
+<arg name="gripper" value="robotiq_2f_85"/>
+</include>
+
+<!-- Start base driver: -->
+<node name="arna_base_control_joystick" pkg="ethercat_master" type="arna_base_control_joystick"/>
+
+<!-- Start arm camera driver -->
+<include file="$(find kinova_vision)/launch/kinova_vision.launch">
+<arg name="device" value="kinova.lan"/>
+<arg name="camera" value="arm_cam"/>
+<arg name="rgb" value="rgb"/>
+</include>
+
+<!-- All nodes defined after this are run on the jetson -->
+<machine name="jetson" address="jetson.lan" default="true" env-loader="/opt/ros/kinetic/env.sh" user="jetson" password="redshellrobot42"/>
+
+<include file="$(find arna_teleop)/launch/openni2.launch" machine="jetson">
+<arg name="num_worker_threads" value="6"/>
+<arg name="camera" value="base_cam"/>
+</include>
+
+</launch>

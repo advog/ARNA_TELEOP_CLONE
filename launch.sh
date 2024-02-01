@@ -1,0 +1,1 @@
+(trap 'kill 0' SIGINT; ./ARNA_TELE_VID 9.tcp.ngrok.io 23897 /arm_cam/color/image_raw/theora & ./ARNA_TELE_VID 9.tcp.ngrok.io 23897 /base_cam/rgb/image_raw/theora & ./ARNA_TELE_MOV 9.tcp.ngrok.io 23897)

@@ -1,0 +1,34 @@
+{
+  "mode_map": [
+    {
+      "name": "base_axis_map",
+      "button": -1,
+      "map": [
+        {"joy_axis": 0, "mov_vector_index": 0, "gain": 150},
+        {"joy_axis": 1, "mov_vector_index": 1, "gain": 150},
+        {"joy_axis": 2, "mov_vector_index": 2, "gain": 150}
+      ]
+    },
+    {
+      "name": "arm_angular_axis_map",
+      "button": 8,
+      "map": [
+        {"joy_axis": 0, "mov_vector_index": 7, "gain": -1},
+        {"joy_axis": 1, "mov_vector_index": 6, "gain": -1},
+        {"joy_axis": 2, "mov_vector_index": 8, "gain": 1}
+      ]
+    },
+    {
+      "name": "arm_linear_axis_map",
+      "button": 9,
+      "map": [
+        {"joy_axis": 0, "mov_vector_index": 3, "gain": -1},
+        {"joy_axis": 1, "mov_vector_index": 5, "gain": -1},
+        {"joy_axis": 2, "mov_vector_index": 4, "gain": 1}
+      ]
+    }
+  ],
+
+  "gripper_button": 0,
+  "deadzone": 4000
+}
