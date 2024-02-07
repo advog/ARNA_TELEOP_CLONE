@@ -1,0 +1,10 @@
+.cache/
+.vscode/
+CMakeFiles/
+ARNA_TELE_MOV
+ARNA_TELE_VID
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+compile_commands.json
+'*.cpp~'
