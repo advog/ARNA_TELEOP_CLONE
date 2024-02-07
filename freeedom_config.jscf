@@ -5,7 +5,7 @@
       "button": -1,
       "map": [
         {"joy_axis": 0, "mov_vector_index": 0, "gain": 150},
-        {"joy_axis": 1, "mov_vector_index": 1, "gain": 150},
+        {"joy_axis": 1, "mov_vector_index": 1, "gain": -150},
         {"joy_axis": 2, "mov_vector_index": 2, "gain": 150}
       ]
     },
