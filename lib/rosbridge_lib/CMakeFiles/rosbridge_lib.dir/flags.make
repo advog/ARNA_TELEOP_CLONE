@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = -Drosbridge_lib_EXPORTS
 
-CXX_INCLUDES = -I/home/vogel/Code/LARRI/ARNA_TELE_GUI/inc -I/home/vogel/Code/LARRI/ARNA_TELE_GUI/lib/rosbridge_lib/inc
+CXX_INCLUDES = -I/home/vogel/Code/LARRI/ARNA_TELEOP_CLONE/inc -I/home/vogel/Code/LARRI/ARNA_TELEOP_CLONE/lib/rosbridge_lib/inc
 
 CXX_FLAGS = -Wall -Wextra -latomic -O3 -fPIC
 

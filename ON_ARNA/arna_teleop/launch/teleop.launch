@@ -11,7 +11,7 @@
 </include>
 
 <!-- Start base driver: -->
-<node name="arna_base_control_joystick" pkg="ethercat_master" type="arna_base_control_joystick"/>
+<node pkg="ethercat_master" type="arna_base_control_PIDD_vel" name="arna_base_control_PIDD_vel" output="screen"/>
 
 <!-- Start arm camera driver -->
 <include file="$(find kinova_vision)/launch/kinova_vision.launch">

@@ -29,7 +29,10 @@ std::string default_ros_port = "9090";
 
 //default topics
 const std::string move_vec_topic = "/ARNA_TELEOP_MOV";
+const std::string com_topic = "/ARNA_TELEOP_COM";
 const std::string depth_topic = "/ARNA_TELEOP_DEPTH";
+
+const int home_command_action = 2;
 
 //
 // func declarations
@@ -162,6 +165,8 @@ GtkWidget* ros_connect_button; //ros connect buttons
 GtkWidget* ros_connect_add_entry;
 GtkWidget* ros_connect_port_entry;
 GtkWidget* ros_status_label;
+
+GtkWidget* home_arm_button;
 
 //
 // logical globals
@@ -307,6 +312,20 @@ gint publish_move_vec(gpointer data){
 
 }
 
+int send_command(int command){
+
+    //send the combined move vector
+    nlohmann::json j;
+    j["data"] = command;
+    ros.publish(com_topic, j);
+
+    state.ros_connected = ros.send_queue() != rosbridge_lib::send_return::seret_disconnected;
+    set_ros_label_status(state.ros_connected);
+
+    return state.ros_connected;
+
+}
+
 //connects to rosbridge server, schedules spin every 3ms and movement transmit every 50ms
 int ros_connect(std::string address, int port){
 
@@ -318,8 +337,16 @@ int ros_connect(std::string address, int port){
 	    return 0;
     }
 
-    // advertise movement_vector topic
+    // advertise movement vector topic
     ros.advertise(move_vec_topic, "std_msgs/Float32MultiArray");
+    state.ros_connected = ros.send_queue() != rosbridge_lib::send_return::seret_disconnected;
+    if(!state.ros_connected){
+	    ros.cleanup();
+	    return 0;
+    }
+
+    // advertise command topic
+    ros.advertise(com_topic, "std_msgs/Int32");
     state.ros_connected = ros.send_queue() != rosbridge_lib::send_return::seret_disconnected;
     if(!state.ros_connected){
 	    ros.cleanup();
@@ -446,6 +473,14 @@ void click_ros_connect_button(GtkWidget *widget, gpointer data){
 
 }
 
+//button callback - homes arm
+void click_home_arm_button(GtkWidget *widget, gpointer data){
+    (void)widget;
+    (void)data;
+
+    send_command(home_command_action);
+}
+
 //load joystick config
 void click_load_joy_config_button(GtkWidget* widget, gpointer data){
     (void)widget;
@@ -549,6 +584,12 @@ void setup_GUI(int argc, char **argv){
         g_signal_connect(G_OBJECT(joy_config_button), "clicked", G_CALLBACK(click_load_joy_config_button), NULL);
         gtk_grid_attach(GTK_GRID(ctrl_grid), joy_config_button, 1, 1, 1, 1);
 
+        //add home arm button
+        home_arm_button = gtk_button_new_with_label("Reset ARM Postition");
+        g_signal_connect(G_OBJECT(home_arm_button), "clicked", G_CALLBACK(click_home_arm_button), NULL);
+        gtk_grid_attach(GTK_GRID(ctrl_grid), home_arm_button, 0, 2, 2, 1);
+
+
     
     //register move buttons helper
     auto register_button = [](GtkWidget*& layout, GtkWidget*& target, std::string text, int x, int y) {
@@ -582,12 +623,12 @@ void setup_GUI(int argc, char **argv){
     register_button(base_layout, base_buttons[5], "↷", 200, 0);
 
     //move_vector map
-    button_map[base_buttons[0]] = std::make_pair(0, -150);
-    button_map[base_buttons[1]] = std::make_pair(0, 150);
-    button_map[base_buttons[2]] = std::make_pair(1, -150);
-    button_map[base_buttons[3]] = std::make_pair(1, 150);
-    button_map[base_buttons[4]] = std::make_pair(2, -150);
-    button_map[base_buttons[5]] = std::make_pair(2, 150);
+    button_map[base_buttons[0]] = std::make_pair(0, -75);
+    button_map[base_buttons[1]] = std::make_pair(0, 75);
+    button_map[base_buttons[2]] = std::make_pair(1, -75);
+    button_map[base_buttons[3]] = std::make_pair(1, 75);
+    button_map[base_buttons[4]] = std::make_pair(2, -75);
+    button_map[base_buttons[5]] = std::make_pair(2, 75);
 
     GtkWidget* base_page_label = gtk_label_new("base");
     gtk_notebook_append_page(GTK_NOTEBOOK(noot), base_layout, base_page_label);

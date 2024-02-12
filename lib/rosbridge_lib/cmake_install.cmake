@@ -1,4 +1,4 @@
-# Install script for directory: /home/vogel/Code/LARRI/ARNA_TELE_GUI/lib/rosbridge_lib
+# Install script for directory: /home/vogel/Code/LARRI/ARNA_TELEOP_CLONE/lib/rosbridge_lib
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
