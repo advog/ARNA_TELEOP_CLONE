@@ -39,11 +39,7 @@ const std::string command_in_topic("ARNA_TELEOP_COM");
 const std::string depth_camera_in_topic("/arm_cam/depth/image_rect");
 
 const std::string arm_out_topic("/arm/in/cartesian_velocity");
-
-//old
-//const std::string base_out_topic("/cmd_vel");
-const std::string base_out_topic("/joy_data");
-
+const std::string base_out_topic("/cmd_vel");
 const std::string depth_out_topic("/ARNA_TELEOP_DEPTH");
 const std::string gripper_out_topic("/arm/base/send_gripper_command");
 
@@ -164,7 +160,7 @@ void execute_command(ros::NodeHandle& n){
 }
 
 //
-// joystick filters
+// Movement Execution
 //
 
 float base_t_scale(float in){
@@ -205,14 +201,16 @@ int main(int argc, char** argv){
     ros::Subscriber sub_base = n.subscribe(mov_in_topic, 100, mov_callback);
     ros::Publisher pub_arm = n.advertise<kortex_driver::TwistCommand>(arm_out_topic, 10);
     
-    //old
+    //pub for vel base
     //ros::Publisher pub_base = n.advertise<geometry_msgs::Twist>(base_out_topic, 10);
-    ros::Publisher pub_base = n.advertise<sensor_msgs::Joy>(base_out_topic, 10);
-    
-    ros::ServiceClient srv_gripper = n.serviceClient<kortex_driver::SendGripperCommand>(gripper_out_topic);
 
+    //pub for joy base
+    ros::Publisher pub_base = n.advertise<sensor_msgs::Jot>(base_out_topic, 10);
+
+    ros::ServiceClient srv_gripper = n.serviceClient<kortex_driver::SendGripperCommand>(gripper_out_topic);
+    
     //depth pub sub
-    image_transport::Subscriber sub_depth = it.subscribe(depth_camera_in_topic, 10, depth_callback);
+    image_transport::Subscriber sub_depth = it.subscribe(depth_camera_in_topic, 1, depth_callback);
     ros::Publisher pub_depth = n.advertise<std_msgs::Float32>(depth_out_topic, 10);
 
     //command sub
@@ -244,20 +242,10 @@ int main(int argc, char** argv){
         else{
             //execute_movement(n);
             //publish base command
-
-            //old
-            /*
             geometry_msgs::Twist base_msg;
             base_msg.linear.x = base_t_scale(mov_vector[1]);
             base_msg.linear.y = -base_t_scale(mov_vector[0]);
             base_msg.angular.z = -base_r_scale(mov_vector[2]);
-            pub_base.publish(base_msg);
-            */
-            sensor_msgs::Joy base_msg;
-            base_msg.axes = std::vector<float>(6);
-            base_msg.axes[0] = mov_vector[0];
-            base_msg.axes[1] = mov_vector[1];
-            base_msg.axes[2] = mov_vector[2];
             pub_base.publish(base_msg);
 
             //publish arm command

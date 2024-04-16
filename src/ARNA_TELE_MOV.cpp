@@ -16,7 +16,6 @@
 #include "json.hpp"
 #include "rosbridge_client.hpp"
 #include "joystick_listener.hpp"
-#include "ARNA_THEORA.hpp"
 
 //
 // consts
@@ -216,6 +215,10 @@ float inline jhelp(float gain, int16_t val){
 
 }
 
+float inline jhelp_normalize(int16_t val){
+    return static_cast<float>(val)/32768.0f;
+}
+
 //polls joystick, returns move vector of joystick inputs
 std::vector<float> poll_joystick(){
 
@@ -245,7 +248,14 @@ std::vector<float> poll_joystick(){
             axis_mapping tmp = joy_conf.axis_map[i];
             if(tmp.active_mode == active_mode){
                 //mapping is active, use it
-                joy_mov_vector[tmp.mov_vector_index] = jhelp(tmp.gain, joy_state.axis[tmp.joy_axis]);
+                
+                if(tmp.active_mode == -1){
+                    joy_mov_vector[tmp.mov_vector_index] = jhelp_normalize(joy_state.axis[tmp.joy_axis]);
+                }
+                else{
+                    joy_mov_vector[tmp.mov_vector_index] = jhelp(tmp.gain, joy_state.axis[tmp.joy_axis]);
+                }
+                
             }
         }
 
